@@ -1,0 +1,62 @@
+; **********************************************************
+; FILE:  LAB01.txt
+;
+; PROGRAMMER:  Jose Cruz
+;
+; DATE OF FIRST RELEASE: 02/05/15
+;
+; PROGRAM PURPOSE:  Exchange the values of the high-order 
+;(left-most) four bits of a location named A with the low-order 
+;(right-most) four bits of a location named B. Save back in 
+; memory once this operation is finished.
+; ***********************************************************
+
+			SIP 	0x00
+			ORG 	0x80		;Setting up values in memory according to instructions
+A:			db		0xAE
+			ORG		0x90
+B:			db		0x3F
+			ORG		0XA0
+Mask:		db		0x0F
+*****************************************
+			ORG		0X00		;Loading all data from memory
+			LOAD	r4, [Mask]	;Loading the mask from memory
+			XOR		r3, r3, r3
+			ADD		r3, r3, r4	;Copying the mask to a second registry for future use
+			ROR		r3, 4		;Rotating mask to be able to target both nibbles. 
+			LOAD	r5, [A]		;Loading Byte A from memory
+			LOAD	r6, [B]		;Loading byte B from memory
+*----------------------------------------*			
+								;Exchanging A's high-order nibble for B's Low-order
+								;nibble.
+			AND		r1, r5, r3	;First step is to use the mask that we rotated to target
+								;The high-order nibble of A
+			ROR		R1, 4		;Once we have said nibble, we rotate it. 
+			AND		r2, r6, r3	;We do the same thing with the higher-order nibble in B
+			OR		R8, R1, R2	;Now that we have B's high-order nibble and A's rotated 
+								;High-order nibble (now a low-order nibble) we put them 
+								;Together to form the new Byte, to be saved in memory. 
+			
+			XOR 	r1, r1, r1	;Once we finished with the first Byte, we XOR both registries
+			XOR		r2, r2, r2	;that were used to give room for the next byte to be modified.
+
+			AND		r1, r5, r4	;The same way that we used the rotated mask to get the 
+			AND		r2, r6, r4	;high-order nibbles, we use the original mask to get the 
+								;low-order nibbles. 
+			ROR		R2, 4		;Again we rotate one of the nibbles (this time its B's 
+								;low-order nibble, to be able to be matched with A's high-order
+								;nibble.
+			OR		R7, R1, R2	;The same way in which we put together both nibbles previously
+								;we do it with the new byte. 
+		
+			STORE	r7, [A]		;Once we have the new bytes, we save them back in memory, 
+			STORE	r8, [B]		;where A and B were before. 	
+*----------------------------------------*
+			HALT
+			
+			
+			
+			
+			
+			
+			

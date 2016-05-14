@@ -1,0 +1,25 @@
+; **********************************************************
+; FILE:  LAB03.txt
+;
+; PROGRAMMER:  Jose Cruz
+;
+; DATE OF FIRST RELEASE: 09/02/15
+;
+; PROGRAM PURPOSE: Display all the ASCII characters that have an external representation.
+; ***********************************************************
+
+			SIP		0X00
+			
+			LOAD	R1, 1			;Load the constant 1
+			LOAD	R2, 0X20		;Load the first printable ascii character to R2
+			LOAD	R0, 0X80		;Load the number (in hex) after the 
+									;last printable ascii character to R0
+			
+Loop:		JMPEQ	R2=R0, Done		;The loop starts with a check to see if 
+									;the value in R2 reached R0
+			MOVE	RF, R2			;Copy the value in R2 to RF to print it
+			ADD		R2, R2, R1		;Add one to the value in R2 to move to the next 
+									;ascii value
+			JMP		Loop			;Return to top of the loop.
+			
+Done:		HALT

@@ -1,0 +1,30 @@
+; **********************************************************
+; FILE:  LAB02.txt
+;
+; PROGRAMMER:  Jose Cruz
+;
+; DATE OF FIRST RELEASE: 09/05/15
+;
+; PROGRAM PURPOSE: 
+; ***********************************************************
+
+			SIP		0X00
+			ORG 	0x80
+Data:   	BSS 	0x40
+DataEnd:    BSS 	0x00
+Stuff:      DB  	0x3F
+
+			ORG		0X00
+			LOAD	R8, Data
+			LOAD	R0, Stuff
+			LOAD	R1, 1
+			XOR		R2, R2, R2
+Loop:		JMPLE	R8<=R0, Ops
+			JMP 	Done
+Ops:		JMPEQ	R8=R0, Done
+			ISTORE	R2, [R8]
+			ADD		R2, R2, R1
+			ADD		R8, R8, R1
+			JMP		Loop
+			
+Done:		HALT
